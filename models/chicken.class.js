@@ -14,49 +14,86 @@ class Chicken extends MovableObj {
         'img/3.Secuencias_Enemy_b�sico/Versi�n_Gallinita (estas salen por orden de la gallina gigantona)/3.Ga_paso izquierdo.png',
     ]
 
-    stackOf_DEATH = 'img/3.Secuencias_Enemy_b�sico/Versi�n_Gallinita (estas salen por orden de la gallina gigantona)/4.G_muerte.png';
+    stackOf_DEATH = ['img/3.Secuencias_Enemy_b�sico/Versi�n_Gallinita (estas salen por orden de la gallina gigantona)/4.G_muerte.png'];
 
+    world;
 
     constructor() { //creating and initializing objects created within a class
 
         super();
         super.loadImg(this.stackOf_WALKING[0]);
         super.loadImgs(this.stackOf_WALKING);
+        super.loadImgs(this.stackOf_DEATH);
 
-        setInterval(() => {
-            super.moveLeft();
-        }, 16);
+        this.action();
 
-        setInterval(() => {
-            super.animate(this.stackOf_WALKING);
-        }, 1000 / 9 / this.speedX)
-        
         this.die();
 
     }
 
+    isJumping() {
+        //TODO
+        return false;
+    }
 
-    // action() {
-    //     this.moveLeft();
-    //     this.die();
-    // }
-    // moveleft() {
-    //     setInterval(() => {
-    //         super.moveLeft();
-    //     }, 16);
-    //     setInterval(() => {
-    //         super.animate(this.stackOf_WALKING);
-    //     }, 1000 / 9 / this.speedX)
-    // }
+
+    action() {
+
+        setInterval(() => {
+            if (!this.isDead()) {
+                super.moveLeft();
+            }
+        }, 16);
+
+        setInterval(() => {
+            if (this.isDead()) {
+                super.animate(this.stackOf_DEATH);
+            }
+            else if (this.isJumping()) {
+
+            } else {
+                super.animate(this.stackOf_WALKING);
+            }
+
+        }, 1000 / 10 / this.speedX)
+
+    }
 
 
     die() {
-        setInterval(() => {
-            if (this.isDead()) {
-                super.loadImg(this.stackOf_DEATH);
-            }
-        }, 1000 / 10);
+        // setInterval(() => {
+        //     this.world.throwableObjs.forEach(bottle => {
+        //         console.log(this.is(bottle))
+        //     })
+        // }, 2000);
+        // setInterval(() => {
+        //     if (
+        //         this.world.throwableObjs.forEach(bottle => {
+        //             this.crash(bottle)
+        //         })
+        //     ) {
+        //         super.loadImg(this.stackOf_DEATH);
+        //     }
+        // }, 1000 / 10);
     }
+
+    // isColliding(bottle) {
+    //     return (
+    //         this.x < bottle.x && bottle.x < this.x + this.width
+    //         && (
+    //             (this.y < bottle.y && bottle.y < this.y + this.width) ||
+    //             (this.y < bottle.y + bottle.width && bottle.y + bottle.width < this.y + this.width)
+    //         )
+    //     )
+    //         ||
+    //         (
+    //             this.x < bottle.x + bottle.width && bottle.x + bottle.width < this.x + this.width
+    //             && (
+    //                 (this.y < bottle.y && bottle.y < this.y + this.width) ||
+    //                 (this.y < bottle.y + bottle.width && bottle.y + bottle.width < this.y + this.width)
+    //             )
+    //         )
+    // }
 
 
 

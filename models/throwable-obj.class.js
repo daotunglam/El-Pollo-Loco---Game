@@ -2,8 +2,8 @@ class ThrowableObj extends MovableObj {
 
 
 
-    width = 50;
-    height = 50;
+    width = 40;
+    height = 40;
     speedX = 20;
     speedY = 10;
 

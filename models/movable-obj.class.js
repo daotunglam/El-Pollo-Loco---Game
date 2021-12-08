@@ -13,6 +13,7 @@ class MovableObj extends Drawableobj {
 
 
 
+
     // playAnimation(stackOfIMGS) {
     //     let i = this.currentImg % stackOfIMGS.length; //to keep i < stackOf_IMGS.length
     //     let path = stackOfIMGS[i];
@@ -36,14 +37,14 @@ class MovableObj extends Drawableobj {
         this.speedY = 30;
     }
 
-    applyGravity(stackOfIMGS) { //make objs drop on the ground
+    applyGravity() { //make objs drop on the ground
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration; //increase dropping-speed every 20ms
-                if (this.isAboveGround() && this.speedY < 0) {
-                    this.animate(stackOfIMGS)
-                }
+                // if (this.isAboveGround() && this.speedY < 0) {
+                //     this.animate(stackOfIMGS)
+                // }
             }
         }, 1000 / 10);
     }
@@ -54,6 +55,9 @@ class MovableObj extends Drawableobj {
         }
         if (this instanceof ThrowableObj) {
             return this.y < 360
+        }
+        if (this instanceof EndBoss) {
+            return this.y < 150
         }
     }
 
@@ -67,12 +71,27 @@ class MovableObj extends Drawableobj {
             this.y < obj.y + obj.height
     }
 
+    // crash(otherobj){
+    //     var myleft = this.x;
+    //     var myright = this.x + (this.width);
+    //     var mytop = this.y;
+    //     var mybottom = this.y + (this.height);
+    //     var otherleft = otherobj.x;
+    //     var otherright = otherobj.x + (otherobj.width);
+    //     var othertop = otherobj.y;
+    //     var otherbottom = otherobj.y + (otherobj.height);
+    //     var crash = true;
+    //     if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+    //         crash = false;
+    //     }
+    //     return crash;
+    // }
+
     hit() {
         if (this.energy > 0) {
-            this.energy -= 10;
+            this.energy -= 1;
             this.lastHit = new Date().getTime();
         }
-        console.log(this.energy)
     }
 
     isHurt() {
@@ -83,6 +102,10 @@ class MovableObj extends Drawableobj {
 
     isDead() {
         return this.energy == 0;
+    }
+
+    kill(){
+        this.energy = 0;
     }
 
 }

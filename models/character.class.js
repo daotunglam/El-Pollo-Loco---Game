@@ -133,7 +133,7 @@ class Character extends MovableObj {
     action() {
 
         // this.dropAtGameStart()
-        // this.idle();
+        this.idle();
         this.moveLeft();
         this.moveRight();
         this.jump();
@@ -152,17 +152,19 @@ class Character extends MovableObj {
     }
 
     idle() {
-        setTimeout(() => {
-            setInterval(() => {
-                super.animate(this.stackOf_IDLE);
-            }, 1000 * 2);
-        }, 3000);
+        //TODO
+        // setTimeout(() => {
+        //     setInterval(() => {
+        //         super.animate(this.stackOf_IDLE);
+        //     }, 1000 * 2);
+        // }, 3000);
 
-        setTimeout(() => {
-            setInterval(() => {
-                super.animate(this.stackOf_LONG_IDLE);
-            }, 1000 * 2);
-        }, 9000);
+        // setTimeout(() => {
+        //     setInterval(() => {
+        //         super.animate(this.stackOf_LONG_IDLE);
+        //     }, 1000 * 2);
+        // }, 9000);
+        return false;
     }
 
     // checkPressedKey() {

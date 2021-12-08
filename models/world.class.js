@@ -26,6 +26,9 @@ class World {
     setWorld() {
         this.character.world = this;
         this.statusBar.world = this;
+        this.level.enemies.forEach(chicken => {
+           chicken.world = this; 
+        });
     }
 
     run() {
@@ -117,11 +120,20 @@ class World {
     checkCollisions() {
         // setInterval(() => {
             this.level.enemies.forEach(enemy => {
-                if (this.character.isColliding(enemy)) {
+                if (this.character.isColliding(enemy) && !enemy.isDead()) {
                     this.character.hit();
                     this.statusBar.setPercentage(this.character.energy);
                 }
-            })
+
+
+                this.throwableObjs.forEach(to =>{
+                    if(enemy.isColliding(to) && !enemy.isDead() ){
+                        console.log(to, " hits ", enemy);
+                        enemy.kill();
+
+                    }
+                });
+            });
         // }, 1000);
     }
 

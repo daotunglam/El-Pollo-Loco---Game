@@ -1,13 +1,10 @@
 class EndBoss extends MovableObj {
 
-    x = 720 * .5;
-    y = 480 - 330;
+    x = 700;
+    y = 150;
     width = 480 * 0.4;
     height = 720 * 0.4;
-    speedX = 5;
-    speedY = 0;
-
-    movementTimeout = 200;
+    speedX = 15;
 
 
     stackOf_WALKING = [
@@ -48,38 +45,92 @@ class EndBoss extends MovableObj {
     ];
 
 
+    mlf;//moveLeft
+    agr;// angry
+    atk;// attack;
+    mrt;// moveRight
+
 
     constructor() {
 
         super();
         super.loadImg(this.stackOf_WALKING[1]);
-        super.loadImgs(this.stackOf_WALKING)
+        super.loadImgs(this.stackOf_WALKING);
+        super.loadImgs(this.stackOf_ANGRY);
+        super.loadImgs(this.stackOf_ATTACK);
+        super.loadImgs(this.stackOf_HURT);
+        super.loadImgs(this.stackOf_DEATH);
 
+        super.applyGravity();
 
-        // setInterval(() => {
-        //     this.changeMovement();
-        //     this.stopCurrentMovement();
-        // }, 5000);
+        setInterval(() => {
+            this.changeMovement();
+        }, 10000);
 
     }
 
 
     changeMovement() {
+
+        this.runForward();
+
         setTimeout(() => {
-            setInterval(() => {
-                super.moveLeft();
-                super.playAnimation(this.stackOf_WALKING);
-            }, 120);
-        }, this.movementTimeout);
+            clearInterval(this.mlf);
+            this.angry();
+        }, 2000);
+
+        setTimeout(() => {
+            clearInterval(this.agr);
+            this.attack();
+        }, 4000);
+
+        setTimeout(() => {
+            clearInterval(this.atk);
+            this.runBack();
+        }, 6000);
+
+        setTimeout(() => {
+            clearInterval(this.mrt)
+        }, 10000);
+
     }
 
-    stopCurrentMovement() {
-        this.x = 720 * .5;
-        this.y = 480 - 330;
-        this.width = 480 * 0.4;
-        this.height = 720 * 0.4;
-        this.speedX = 5;
-        this.speedY = 0;
+
+    runForward() {
+        this.mlf =
+            setInterval(() => {
+                if (this.x > 0) {
+                    super.moveLeft();
+                    super.animate(this.stackOf_WALKING);
+                }
+            }, 1000 / 10);
+    }
+
+    angry() {
+        this.agr =
+            setInterval(() => {
+                this.x -= 0;
+                super.animate(this.stackOf_ANGRY);
+            }, 1000 / 10);
+    }
+
+    attack() {
+        this.atk =
+            setInterval(() => {
+                if (!super.isAboveGround()) {
+                    super.jump();
+                }
+                this.moveLeft();
+                super.animate(this.stackOf_ATTACK);
+            }, 1000 / 10);
+    }
+
+    runBack() {
+        this.mrt =
+            setInterval(() => {
+                super.moveRight()
+                super.animate(this.stackOf_WALKING)
+            }, 1000 / 10);
     }
 
 }
