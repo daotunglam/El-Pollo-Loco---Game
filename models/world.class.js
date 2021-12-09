@@ -26,8 +26,8 @@ class World {
     setWorld() {
         this.character.world = this;
         this.statusBar.world = this;
-        this.level.enemies.forEach(chicken => {
-           chicken.world = this; 
+        this.level.enemies.forEach(enemy => {
+            enemy.world = this;
         });
     }
 
@@ -35,6 +35,7 @@ class World {
         setInterval(() => {
             this.checkCollisions();
             this.checkThrowObjs();
+            this.checkDistanceCharacterEndboss();
         }, 200);
     }
 
@@ -75,11 +76,11 @@ class World {
         this.addToMap(this.level.enemies);
         this.addToMap(this.level.endBoss);
         this.addToMap(this.throwableObjs);
-        
-        this.ctx.translate(-this.camera_x, 0)
+
+        // this.ctx.translate(-this.camera_x, 0)
         this.addToMap(this.statusBar);
-        this.ctx.translate(this.camera_x, 0)
-        
+        // this.ctx.translate(this.camera_x, 0)
+
         this.addToMap(this.character); //draw the character in a new coordinate
 
     }
@@ -119,22 +120,48 @@ class World {
 
     checkCollisions() {
         // setInterval(() => {
-            this.level.enemies.forEach(enemy => {
-                if (this.character.isColliding(enemy) && !enemy.isDead()) {
-                    this.character.hit();
-                    this.statusBar.setPercentage(this.character.energy);
+        for (let i = 0; i < this.level.enemies.length - 1; i++) {
+
+
+            const chicken = this.level.enemies[i];
+
+            if (this.character.isColliding(chicken) && !chicken.isDead()) {
+                this.character.hit();
+                this.statusBar.setPercentage(this.character.energy);
+            }
+
+
+            this.throwableObjs.forEach(bottle => {
+
+                if (chicken.isColliding(bottle) && !chicken.isDead()) {
+                    chicken.kill();
                 }
 
+                let eB = this.level.endBoss;
+                if (eB.isColliding(bottle) && !eB.isDead()) {
+                    eB.hit();
+                    eB.scream();
+                    bottle.break();
+                }
 
-                this.throwableObjs.forEach(to =>{
-                    if(enemy.isColliding(to) && !enemy.isDead() ){
-                        console.log(to, " hits ", enemy);
-                        enemy.kill();
-
-                    }
-                });
             });
+
+
+        }
+
+        if (this.level.endBoss.isColliding(this.character)) {
+            this.character.hit();
+            this.statusBar.setPercentage(this.character.energy)
+        }
         // }, 1000);
     }
 
+    checkDistanceCharacterEndboss() {
+        let distanceCharacterEndBoss = this.level.endBoss.x - this.character.x;
+        if (distanceCharacterEndBoss == 500 ||
+            this.level.endBoss.isHurt()
+        ) {
+            this.level.endBoss.activated()
+        }
+    }
 }

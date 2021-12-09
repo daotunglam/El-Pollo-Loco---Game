@@ -9,6 +9,8 @@ class ThrowableObj extends MovableObj {
 
     world;
 
+    bottleBreak_sound = new Audio('sounds/bottleBreak.mp3')
+
     stackOf_TROW = [
         'img/6.botella/Rotaci�n/Mesa de trabajo 1 copia 3.png',
         'img/6.botella/Rotaci�n/Mesa de trabajo 1 copia 4.png',
@@ -46,22 +48,21 @@ class ThrowableObj extends MovableObj {
             else {
                 super.moveLeft();
             }
+
             super.animate(this.stackOf_TROW)
-            this.break();
+
+            if (!super.isAboveGround() && this.y < 480) {
+                this.break();
+            }
         }, 1000 / 10);
 
     }
 
     break() {
-        if (!super.isAboveGround()) {
-            super.animate(this.stackOf_BREAK)
-            this.speedX = 0;
-            setTimeout(() => {
-                this.y = 480;
-            //     let index = this.world.throwableObjs.indexOf(this)
-            //     this.world.throwableObjs.splice(index, 1)
-            }, 1000/10);
-        }
+        this.bottleBreak_sound.play();
+        super.animate(this.stackOf_BREAK);
+        this.speedX = 0;
+        super.disappear();
     }
 
 

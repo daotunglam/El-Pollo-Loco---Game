@@ -1,10 +1,19 @@
 class EndBoss extends MovableObj {
 
-    x = 700;
+    x = 720 * 4 - 300;
     y = 150;
     width = 480 * 0.4;
     height = 720 * 0.4;
-    speedX = 15;
+    speedX = 5;
+
+    energy = 500;
+
+    world;
+
+
+    walking_sound = new Audio('sounds/endBossRun.mp3');
+    attack_sound = new Audio('sounds/endBossAttack.mp3')
+    dead_sound = new Audio('sounds/endBossDead.mp3')
 
 
     stackOf_WALKING = [
@@ -45,10 +54,13 @@ class EndBoss extends MovableObj {
     ];
 
 
+    chMv;//changeMovements
     mlf;//moveLeft
     agr;// angry
     atk;// attack;
     mrt;// moveRight
+    scr;//scream
+    d;
 
 
     constructor() {
@@ -63,12 +75,33 @@ class EndBoss extends MovableObj {
 
         super.applyGravity();
 
-        setInterval(() => {
-            this.changeMovement();
-        }, 10000);
-
     }
 
+    /**
+     * activate endBoss when distance betwwen Character & endBoss is 500px.
+     * The movements start in order.
+     * Every 10s the order is restarted.
+     */
+    activated() {
+
+        this.chMv = setInterval(() => {
+
+            setInterval(() => {
+
+                if (!super.isDead()) {
+                    // this.chMv = setInterval(() => {
+                    this.changeMovement();
+                    // }, 10000);
+                }
+                else {
+                    // clearInterval(this.chMv)
+                    this.die()
+                }
+
+            }, 1000 / 10);
+
+        }, 10000);
+    }
 
     changeMovement() {
 
@@ -79,31 +112,32 @@ class EndBoss extends MovableObj {
             this.angry();
         }, 2000);
 
-        setTimeout(() => {
-            clearInterval(this.agr);
-            this.attack();
-        }, 4000);
+        // setTimeout(() => {
+        //     clearInterval(this.agr);
+        //     this.attack();
+        // }, 4000);
 
-        setTimeout(() => {
-            clearInterval(this.atk);
-            this.runBack();
-        }, 6000);
+        // setTimeout(() => {
+        //     clearInterval(this.atk);
+        //     this.runBack();
+        // }, 6000);
 
-        setTimeout(() => {
-            clearInterval(this.mrt)
-        }, 10000);
+        // setTimeout(() => {
+        //     clearInterval(this.mrt)
+        // }, 10000);
 
     }
 
 
     runForward() {
-        this.mlf =
-            setInterval(() => {
-                if (this.x > 0) {
-                    super.moveLeft();
-                    super.animate(this.stackOf_WALKING);
-                }
-            }, 1000 / 10);
+        if (this.x > 0) {
+            // this.mlf =
+            //     setInterval(() => {
+            super.moveLeft();
+            // }, 5000);
+            super.animate(this.stackOf_WALKING);
+            this.walking_sound.play();
+        }
     }
 
     angry() {
@@ -122,6 +156,7 @@ class EndBoss extends MovableObj {
                 }
                 this.moveLeft();
                 super.animate(this.stackOf_ATTACK);
+                this.attack_sound.play();
             }, 1000 / 10);
     }
 
@@ -131,6 +166,29 @@ class EndBoss extends MovableObj {
                 super.moveRight()
                 super.animate(this.stackOf_WALKING)
             }, 1000 / 10);
+    }
+
+
+
+    scream() {
+        // this.scr = setInterval(() => {
+        this.animate(this.stackOf_HURT)
+        // }, 1000 / 10);
+        // setTimeout(() => {
+        //     clearInterval(this.scr)
+        // }, 1000 / 3);
+    }
+
+
+
+    die() {
+        // this.d = setInterval(() => {
+        this.animate(this.stackOf_DEATH)
+        this.dead_sound.play();
+        // }, 1000 / 10);
+        // setTimeout(() => {
+        //     clearInterval(this.d)
+        // }, 3000);
     }
 
 }

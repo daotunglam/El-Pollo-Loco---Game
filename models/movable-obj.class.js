@@ -42,9 +42,6 @@ class MovableObj extends Drawableobj {
             if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration; //increase dropping-speed every 20ms
-                // if (this.isAboveGround() && this.speedY < 0) {
-                //     this.animate(stackOfIMGS)
-                // }
             }
         }, 1000 / 10);
     }
@@ -89,7 +86,7 @@ class MovableObj extends Drawableobj {
 
     hit() {
         if (this.energy > 0) {
-            this.energy -= 1;
+            this.energy -= 10;
             this.lastHit = new Date().getTime();
         }
     }
@@ -106,6 +103,14 @@ class MovableObj extends Drawableobj {
 
     kill(){
         this.energy = 0;
+    }
+
+    disappear() {
+        setTimeout(() => {
+            this.y = 480; //under canvas
+            //     let index = this.world.throwableObjs.indexOf(this)
+            //     this.world.throwableObjs.splice(index, 1)
+        }, 1000 / 10);
     }
 
 }

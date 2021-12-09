@@ -45,9 +45,15 @@ class Chicken extends MovableObj {
             }
         }, 16);
 
+    }
+
+
+    die() {
+
         setInterval(() => {
             if (this.isDead()) {
                 super.animate(this.stackOf_DEATH);
+                super.disappear();
             }
             else if (this.isJumping()) {
 
@@ -56,25 +62,7 @@ class Chicken extends MovableObj {
             }
 
         }, 1000 / 10 / this.speedX)
-
-    }
-
-
-    die() {
-        // setInterval(() => {
-        //     this.world.throwableObjs.forEach(bottle => {
-        //         console.log(this.is(bottle))
-        //     })
-        // }, 2000);
-        // setInterval(() => {
-        //     if (
-        //         this.world.throwableObjs.forEach(bottle => {
-        //             this.crash(bottle)
-        //         })
-        //     ) {
-        //         super.loadImg(this.stackOf_DEATH);
-        //     }
-        // }, 1000 / 10);
+        
     }
 
     // isColliding(bottle) {

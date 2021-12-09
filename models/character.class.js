@@ -1,11 +1,9 @@
 class Character extends MovableObj {
 
 
-    // keyD = false;
-    // keyLeft = false;
-    // keyRight = false;
-    // keySpace = false;
-    // keyUp = false;
+    idl; //idle
+    longIdl; //longIdle
+
 
     y = 0;
     x = 100;
@@ -114,8 +112,9 @@ class Character extends MovableObj {
         super.loadImgs(this.stackOf_DEATH);
 
         super.applyGravity(this.stackOf_DROPPING);
-        // this.checkPressedKey(); //doesn't work, don't know why
-        // this.animate();
+
+        this.moveCameraWith();
+
         this.action();
     }
 
@@ -129,19 +128,35 @@ class Character extends MovableObj {
     // }
 
 
+    moveCameraWith() {
+        setInterval(() => {
+            if (this.x < this.world.level.level_end_x - 720 + 100) {
+                this.world.camera_x = -this.x + 100; //camera looks at 100px left.
+            }
+            else {
+                this.world.camera_x = -(this.world.level.level_end_x - 720);
+            }
+        }, 1000 / 10);
+    }
+
+
 
     action() {
 
         // this.dropAtGameStart()
-        this.idle();
+        this.runFaster();
+
         this.moveLeft();
         this.moveRight();
         this.jump();
+
         this.scream();
         this.die();
         // this.stomp();
         // this.bounce();
         // this.trow();
+
+        this.idle()
 
     }
 
@@ -151,39 +166,53 @@ class Character extends MovableObj {
         this.y = 0;
     }
 
-    idle() {
-        //TODO
-        // setTimeout(() => {
-        //     setInterval(() => {
-        //         super.animate(this.stackOf_IDLE);
-        //     }, 1000 * 2);
-        // }, 3000);
-
-        // setTimeout(() => {
-        //     setInterval(() => {
-        //         super.animate(this.stackOf_LONG_IDLE);
-        //     }, 1000 * 2);
-        // }, 9000);
-        return false;
+    isIdle() {
+        return !this.world.keyboard.LEFT &&
+            !this.world.keyboard.RIGHT &&
+            !this.world.keyboard.D &&
+            !this.world.keyboard.UP &&
+            !this.world.keyboard.SPACE &&
+            !this.isHurt() &&
+            !this.isDead()
     }
 
-    // checkPressedKey() {
-    //     setInterval(() => {
-    //         if (this.world.keyboard.D) { this.keyD = true;} else { this.keyD = false;}
-    //         if (this.world.keyboard.UP) { this.keyUp = true; } else { this.keyUp = false;}
-    //         if (this.world.keyboard.LEFT) { this.keyLeft = true; } else { this.keyLeft = false;}
-    //         if (this.world.keyboard.RIGHT) { this.keyRight = true; } else { this.keyRight = false;}
-    //         if (this.world.keyboard.SPACE) { this.keySpace = true; } else { this.keySpace = false;}
-    //     }, 16);
-    // }
+    idle() {
+        // setInterval(() => {
+
+        //     clearInterval(this.longIdl)
+        this.idl = setInterval(() => {
+            if (this.isIdle()) {
+                super.animate(this.stackOf_IDLE);
+            }
+        }, 1000 / 10);
+
+        //     setTimeout(() => {
+        //         clearInterval(this.idl)
+        //         this.longIdl = setInterval(() => {
+        //             super.animate(this.stackOf_LONG_IDLE);
+        //         }, 1000 / 10);
+        //     }, 5000);
+
+        // }, 10000);
+    }
+
+    runFaster() {
+        setInterval(() => {
+            if (this.world.keyboard.SPACE) {
+                this.speedX = 25;
+            } else {
+                this.speedX = 10;
+            }
+        }, 1000 / 10);
+    }
 
 
     moveLeft() {
 
         setInterval(() => {
-            // this.walking_sound.pause();
 
-            if (this.world.keyboard.LEFT
+            if
+                (this.world.keyboard.LEFT
                 && this.x > 0 //keep character not moving over left of map.
             ) {
                 this.otherDirection = true;
@@ -192,20 +221,17 @@ class Character extends MovableObj {
                     super.animate(this.stackOf_WALKING);
                     this.playSound(this.walking_sound, 50 / 100);
                 }
-            } 
-            // else{this.idle()}
-            this.world.camera_x = -this.x + 100; //camera looks at 100px left.
-        }, 1000 / 10);
+            }
 
+        }, 1000 / 10);
     }
 
 
     moveRight() {
 
         setInterval(() => {
-            // this.walking_sound.pause(); //agains the working of playSound in moveLeft
-
-            if (this.world.keyboard.RIGHT
+            if
+                (this.world.keyboard.RIGHT
                 && this.x < this.world.level.level_end_x //to keep character not moving over right of map
             ) {
                 this.otherDirection = false;
@@ -213,10 +239,9 @@ class Character extends MovableObj {
                 if (! super.isAboveGround()) {
                     super.animate(this.stackOf_WALKING);
                     this.playSound(this.walking_sound, 50 / 100);
-
                 }
             }
-            this.world.camera_x = -this.x + 100; //camera looks at 100px left.
+
         }, 1000 / 10);
 
     }
@@ -229,13 +254,21 @@ class Character extends MovableObj {
                 && !super.isAboveGround()
             ) {
                 super.jump();
-                if (this.speedY >= 0) {
-                    super.animate(this.stackOf_JUMPING)
-                }
                 this.playSound(this.jumping_sound, 10 / 100);
             }
         }, 1000 / 10);
 
+        setInterval(() => {
+            if (this.speedY >= 0) {
+                super.animate(this.stackOf_JUMPING)
+            }
+        }, 1000 / 5);
+
+        setInterval(() => {
+            if (this.isAboveGround() && this.speedY < 0) {
+                this.animate(this.stackOf_DROPPING)
+            }
+        }, 1000 / 5);
     }
 
 
@@ -263,89 +296,6 @@ class Character extends MovableObj {
         sound.volume = volume;
     }
 
-
-
-    // animate() {
-
-
-    //     setInterval(() => {
-
-    //         this.walking_sound.pause();
-
-    //         if (
-    //             this.world.keyboard.RIGHT ||
-    //             this.world.keyboard.LEFT
-    //         ) {
-    //             super.playAnimation(this.stackOf_WALKING);
-    //             this.walking_sound.volume = 0.05;
-    //             this.walking_sound.play();
-    //         }
-
-    //         if (this.world.keyboard.UP && super.isAboveGround()) {
-    //             super.playAnimation(this.stackOf_JUMPING);
-    //         }
-
-    //         if (this.isHurt()) {
-    //             super.playAnimation(this.stackOf_HURT)
-    //         }
-
-    //         if (this.isDead()) {
-    //             if (
-    //                 this instanceof Character
-    //                 ||
-    //                 this instanceof EndBoss
-    //             ) {
-    //                 this.playAnimation(this.stackOf_DEATH);
-    //             }
-
-    //             if (this instanceof Chicken) {
-    //                 this.loadImg(img_DEATH)
-    //             }
-    //         }
-
-    //     }, 1000 / 9);
-
-
-    //     setInterval(() => {
-
-    //         if (
-    //             this.world.keyboard.RIGHT
-    //             && this.x < this.world.level.level_end_x //to keep character not moving over right of map
-    //         ) {
-    //             this.otherDirection = false;
-    //             super.moveRight();
-    //         }
-
-    //         if (
-    //             this.world.keyboard.LEFT
-    //             && this.x > 0 //keep character not moving over left of map.
-    //         ) {
-    //             this.otherDirection = true;
-    //             super.moveLeft();
-    //         }
-
-    //         if (
-    //             this.world.keyboard.UP &&
-    //             !super.isAboveGround()
-    //         ) {
-    //             super.jump()
-    //         }
-
-    //         this.world.camera_x = -this.x + 100; //camera looks at 100px left.
-
-    //     }, 60);
-
-
-    // }
-
-
-
-
-    // cancelMovability(){
-    //     this.moveRight(){
-    //         return;
-    //     }
-    // }
 
 
 
