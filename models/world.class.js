@@ -50,6 +50,7 @@ class World {
 
 
 
+
     draw() {
 
         this.delContext();
@@ -121,7 +122,7 @@ class World {
     }
 
     checkCollisions() {
-        
+
         for (let i = 0; i < this.level.enemies.length - 1; i++) {
 
 
@@ -156,7 +157,7 @@ class World {
             this.character.hit();
             this.statusBar.setPercentage(this.character.energy)
         }
-        
+
     }
 
 }

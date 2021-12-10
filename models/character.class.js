@@ -111,13 +111,7 @@ class Character extends MovableObj {
         super.loadImgs(this.stackOf_HURT);
         super.loadImgs(this.stackOf_DEATH);
 
-        super.applyGravity();
-
-        this.moveCameraWith();
-
         this.action();
-
-        this.playDangerMusic();
     }
 
 
@@ -130,20 +124,12 @@ class Character extends MovableObj {
     // }
 
 
-    moveCameraWith() {
-        setInterval(() => {
-            if (this.x < this.world.level.level_end_x - 720 + 100) {
-                this.world.camera_x = -this.x + 100; //camera looks at 100px left.
-            }
-            else {
-                this.world.camera_x = -(this.world.level.level_end_x - 720);
-            }
-        }, 1000 / 10);
-    }
-
 
 
     action() {
+        super.applyGravity();
+        this.moveCameraWith();
+
 
         // this.dropAtGameStart()
         this.runFaster();
@@ -154,12 +140,25 @@ class Character extends MovableObj {
 
         this.scream();
         this.die();
-        // this.stomp();
+        this.stomp();
         // this.bounce();
         // this.trow();
 
         this.idle()
 
+        this.playDangerMusic();
+
+    }
+
+    moveCameraWith() {
+        setInterval(() => {
+            if (this.x < this.world.level.level_end_x - 720 + 100) {
+                this.world.camera_x = -this.x + 100; //camera looks at 100px left.
+            }
+            else {
+                this.world.camera_x = -(this.world.level.level_end_x - 720);
+            }
+        }, 1000 / 10);
     }
 
 
@@ -299,11 +298,36 @@ class Character extends MovableObj {
     }
 
 
-    playDangerMusic(){
+    playDangerMusic() {
         //TODO
         return false
     }
 
+
+    stomp() {
+        setInterval(() => {
+
+            let e = this.world.level.enemies;
+            for (let i = 0; i < (e.length - 1); i++) {
+
+                const enemy = e[i];
+
+                let mybottom = this.y + (this.height);
+                let othertop = enemy.y;
+
+                if (super.isColliding(enemy) &&
+                    this.isAboveGround() &&
+                    this.speedY < 0 &&
+                    mybottom - othertop
+                ) {
+                    console.log(enemy, mybottom, othertop)
+                    enemy.kill()
+                }
+
+            }
+
+        }, 1000 / 10);
+    }
 
 
 }

@@ -61,15 +61,36 @@ class MovableObj extends Drawableobj {
         }
     }
 
+
     isColliding(obj) {
-        return this.x + this.width > obj.x
-            &&
-            this.y + this.height > obj.y
-            &&
-            this.x < obj.x
-            &&
-            this.y < obj.y + obj.height
+
+        // return this.x + this.width > obj.x
+        //     &&
+        //     this.y + this.height > obj.y
+        //     &&
+        //     this.x < obj.x
+        //     &&
+        //     this.y < obj.y + obj.height
+            
+        let myleft = this.x;
+        let myright = this.x + (this.width);
+        let mytop = this.y;
+        let mybottom = this.y + (this.height);
+        let otherleft = obj.x;
+        let otherright = obj.x + (obj.width);
+        let othertop = obj.y;
+        let otherbottom = obj.y + (obj.height);
+
+        let crash = true;
+
+        if ((mybottom < othertop) || (mytop >= otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+            crash = false;
+        }
+
+        return crash;
+    
     }
+
 
     hit() {
         if (this.energy > 0) {
@@ -99,5 +120,6 @@ class MovableObj extends Drawableobj {
             //     this.world.throwableObjs.splice(index, 1)
         }, 1000 / 10);
     }
+
 
 }
