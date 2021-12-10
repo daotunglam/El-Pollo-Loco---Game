@@ -111,7 +111,7 @@ class Character extends MovableObj {
         super.loadImgs(this.stackOf_HURT);
         super.loadImgs(this.stackOf_DEATH);
 
-        super.applyGravity(this.stackOf_DROPPING);
+        super.applyGravity();
 
         this.moveCameraWith();
 

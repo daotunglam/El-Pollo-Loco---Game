@@ -24,7 +24,7 @@ class StatusBar extends Drawableobj {
         super();
         // super.loadImg(this.IMAGES[5]);
         this.setPercentage(100);
-        this.moveStatusBarWithCamera();
+        // this.moveStatusBarWithCamera();
     }
 
     //setPercentage(50);

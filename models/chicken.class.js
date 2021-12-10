@@ -1,9 +1,9 @@
 class Chicken extends MovableObj {
 
-    x = 400 + Math.random() * 500; //each chicken is drawed in a random coordinate 300px far from canvas-left
-    y = 480 - 110;
-    width = 100 * 0.5;
-    height = 100 * 0.5;
+    x = 400 + Math.random() * (720 * 4); //each chicken is drawed in a random coordinate 300px far from canvas-left
+    y = 480 - 130;
+    width = 100 * 0.7;
+    height = 100 * 0.7;
     speedX = 0.15 + Math.random() * 0.8;
     speedY = 0;
     speedAnimation = 1000 / 24;

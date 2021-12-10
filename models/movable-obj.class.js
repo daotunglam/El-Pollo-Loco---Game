@@ -53,6 +53,9 @@ class MovableObj extends Drawableobj {
         if (this instanceof ThrowableObj) {
             return this.y < 360
         }
+        if (this instanceof MiniChicken) {
+            return this.y < 370;
+        }
         if (this instanceof EndBoss) {
             return this.y < 150
         }
@@ -67,22 +70,6 @@ class MovableObj extends Drawableobj {
             &&
             this.y < obj.y + obj.height
     }
-
-    // crash(otherobj){
-    //     var myleft = this.x;
-    //     var myright = this.x + (this.width);
-    //     var mytop = this.y;
-    //     var mybottom = this.y + (this.height);
-    //     var otherleft = otherobj.x;
-    //     var otherright = otherobj.x + (otherobj.width);
-    //     var othertop = otherobj.y;
-    //     var otherbottom = otherobj.y + (otherobj.height);
-    //     var crash = true;
-    //     if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
-    //         crash = false;
-    //     }
-    //     return crash;
-    // }
 
     hit() {
         if (this.energy > 0) {

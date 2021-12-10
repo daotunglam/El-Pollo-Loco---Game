@@ -1,14 +1,17 @@
 class EndBoss extends MovableObj {
 
-    x = 720 * 4 - 300;
+    x = 720;
+    // x = 720 * 4 - 300;
     y = 150;
     width = 480 * 0.4;
     height = 720 * 0.4;
-    speedX = 5;
+    speedX = 10;
 
-    energy = 500;
+    energy = 5000;
 
     world;
+
+    dst;//distance between endBoss and Character
 
 
     walking_sound = new Audio('sounds/endBossRun.mp3');
@@ -54,13 +57,14 @@ class EndBoss extends MovableObj {
     ];
 
 
-    chMv;//changeMovements
-    mlf;//moveLeft
+    move;
+    rF;//runForward
     agr;// angry
     atk;// attack;
-    mrt;// moveRight
+    rB;// moveRight
     scr;//scream
-    d;
+    d;//die
+    gB;//giveBirth
 
 
     constructor() {
@@ -75,120 +79,171 @@ class EndBoss extends MovableObj {
 
         super.applyGravity();
 
+        // this.distanceCharacterSmaller500();
+        this.action()
+
     }
 
     /**
-     * activate endBoss when distance betwwen Character & endBoss is 500px.
-     * The movements start in order.
-     * Every 10s the order is restarted.
+     * activate endBoss when distance between Character & endBoss is 500px
+     * or endBoss is hurt.
      */
-    activated() {
 
-        this.chMv = setInterval(() => {
+    // distanceCharacterSmaller500() {
+    //     setInterval(() => {
+    //         this.dst = this.x - this.world.character.x;
+    //         return this.dst < 500;
+    //     }, 1000 / 10);
+    // }
+    // distanceCharacterSmaller200() {
+    //     setInterval(() => {
+    //         this.dst = this.x - this.world.character.x;
+    //         return this.dst < 200;
+    //     }, 1000 / 10);
+    // }
 
-            setInterval(() => {
+    action() {
 
-                if (!super.isDead()) {
-                    // this.chMv = setInterval(() => {
-                    this.changeMovement();
-                    // }, 10000);
-                }
-                else {
-                    // clearInterval(this.chMv)
-                    this.die()
-                }
+        // this.rF = setInterval(() => {
+        //     this.distanceWithCharacter = this.x - this.world.character.x;
+        //     if (this.distanceWithCharacter < 500 || this.isHurt()) {
+        //         if (!super.isDead()) {
+        //             if (this.distanceWithCharacter < 500) {
+        //                 this.runForward()
+        //             }
+        //             if (this.distanceWithCharacter < 200) {
+        //                 this.angry;
+        //             }
+        //             if (this.world.character.isHurt()) {
+        //                 this.moveRight();
+        //             }
+        //         }
+        //         else {
+        //             this.die()
+        //         }
+        //     }
+        // }, 1000 / 10);
 
+        // setTimeout(() => {
+        // clearInterval(this.rF)
+        // setInterval(() => {
+        //     if (this.distanceCharacterSmaller500() || this.isHurt()) {
+        //         if (super.isDead()) {
+        //             this.die()
+        //         }
+        //         else {
+        //             if (!super.isAboveGround()) {
+        //                 this.jump()
+        //             }
+        //         }
+        //     }
+        // }, 1000 / 10);
+        // }, 2000);
+
+        this.move = setInterval(() => {
+
+            this.rF = setInterval(() => {
+                if (super.isDead()) { this.die() }
+                else if (super.isHurt()) { this.scream() }
+                else { this.runForward() }
             }, 1000 / 10);
 
-        }, 10000);
+            setTimeout(() => {
+                clearInterval(this.rF);
+                this.agr = setInterval(() => {
+                    if (super.isDead()) { this.die() }
+                    else if (super.isHurt()) { this.scream() }
+                    else { this.angry() }
+                }, 1000 / 10);
+            }, 1000 * 2);
+
+            setTimeout(() => {
+                clearInterval(this.agr);
+                this.atk = setInterval(() => {
+                    if (super.isDead()) { this.die() }
+                    else if (super.isHurt()) { this.scream() }
+                    else { this.attack() }
+                }, 1000 / 10);
+            }, 1000 * 4);
+
+            setTimeout(() => {
+                clearInterval(this.atk);
+                this.rB = setInterval(() => {
+                    if (super.isDead()) { this.die() }
+                    else if (super.isHurt()) { this.scream() }
+                    else { this.runBack() }
+                }, 1000 / 10);
+            }, 1000 * 6);
+
+            setTimeout(() => {
+                clearInterval(this.rB)
+                if (super.isHurt()) { this.scream() }
+            }, 1000 * 9);
+
+        }, 1000 * 10);
+
+        this.gB = setInterval(() => {
+            if (super.isHurt()) { this.scream() }
+            if (super.isDead()) { this.die() }
+            else { 
+                if (this.energy < 2500) {
+                    console.log(this.energy)
+                    clearInterval(this.move);
+                    this.createMiniChicken();
+                }
+             }
+        }, 1000 / 10);
     }
-
-    changeMovement() {
-
-        this.runForward();
-
-        setTimeout(() => {
-            clearInterval(this.mlf);
-            this.angry();
-        }, 2000);
-
-        // setTimeout(() => {
-        //     clearInterval(this.agr);
-        //     this.attack();
-        // }, 4000);
-
-        // setTimeout(() => {
-        //     clearInterval(this.atk);
-        //     this.runBack();
-        // }, 6000);
-
-        // setTimeout(() => {
-        //     clearInterval(this.mrt)
-        // }, 10000);
-
-    }
-
 
     runForward() {
-        if (this.x > 0) {
-            // this.mlf =
-            //     setInterval(() => {
+        // if (this.x > 720 * 3) {
+        if (this.x > 200) {
             super.moveLeft();
-            // }, 5000);
             super.animate(this.stackOf_WALKING);
             this.walking_sound.play();
         }
     }
 
     angry() {
-        this.agr =
-            setInterval(() => {
-                this.x -= 0;
-                super.animate(this.stackOf_ANGRY);
-            }, 1000 / 10);
+        this.x -= 0;
+        super.animate(this.stackOf_ANGRY);
     }
 
     attack() {
-        this.atk =
-            setInterval(() => {
-                if (!super.isAboveGround()) {
-                    super.jump();
-                }
-                this.moveLeft();
-                super.animate(this.stackOf_ATTACK);
-                this.attack_sound.play();
-            }, 1000 / 10);
+        if (!super.isAboveGround()) {
+            super.jump();
+        }
+        this.moveLeft();
+        super.animate(this.stackOf_ATTACK);
+        this.attack_sound.play();
     }
 
     runBack() {
-        this.mrt =
-            setInterval(() => {
-                super.moveRight()
-                super.animate(this.stackOf_WALKING)
-            }, 1000 / 10);
+        super.moveRight()
+        super.animate(this.stackOf_WALKING)
+    }
+
+    createMiniChicken() {
+        if (!super.isAboveGround()) {
+            super.jump();
+        }
+        if (this.speedY > 30) {
+            return false
+        }
+
     }
 
 
 
     scream() {
-        // this.scr = setInterval(() => {
         this.animate(this.stackOf_HURT)
-        // }, 1000 / 10);
-        // setTimeout(() => {
-        //     clearInterval(this.scr)
-        // }, 1000 / 3);
     }
 
 
 
     die() {
-        // this.d = setInterval(() => {
         this.animate(this.stackOf_DEATH)
         this.dead_sound.play();
-        // }, 1000 / 10);
-        // setTimeout(() => {
-        //     clearInterval(this.d)
-        // }, 3000);
     }
 
 }

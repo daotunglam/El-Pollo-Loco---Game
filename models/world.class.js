@@ -35,7 +35,6 @@ class World {
         setInterval(() => {
             this.checkCollisions();
             this.checkThrowObjs();
-            this.checkDistanceCharacterEndboss();
         }, 200);
     }
 
@@ -77,9 +76,9 @@ class World {
         this.addToMap(this.level.endBoss);
         this.addToMap(this.throwableObjs);
 
-        // this.ctx.translate(-this.camera_x, 0)
+        this.ctx.translate(-this.camera_x, 0)
         this.addToMap(this.statusBar);
-        // this.ctx.translate(this.camera_x, 0)
+        this.ctx.translate(this.camera_x, 0)
 
         this.addToMap(this.character); //draw the character in a new coordinate
 
@@ -156,12 +155,4 @@ class World {
         // }, 1000);
     }
 
-    checkDistanceCharacterEndboss() {
-        let distanceCharacterEndBoss = this.level.endBoss.x - this.character.x;
-        if (distanceCharacterEndBoss == 500 ||
-            this.level.endBoss.isHurt()
-        ) {
-            this.level.endBoss.activated()
-        }
-    }
 }
