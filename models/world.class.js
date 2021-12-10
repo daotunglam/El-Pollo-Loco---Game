@@ -6,6 +6,7 @@ class World {
     level = level1;
     character = new Character();
     statusBar = new StatusBar();
+    statusBarEndBoss = new StatusBarEndBoss();
     throwableObjs = [];
     camera_x;
 
@@ -26,6 +27,7 @@ class World {
     setWorld() {
         this.character.world = this;
         this.statusBar.world = this;
+        this.statusBarEndBoss.world = this;
         this.level.enemies.forEach(enemy => {
             enemy.world = this;
         });
@@ -40,7 +42,7 @@ class World {
 
     checkThrowObjs() {
         if (this.keyboard.D) {
-            let bottle = new ThrowableObj(this.character.x, this.character.y);
+            let bottle = new ThrowableObj(this.character.x, this.character.y, this.character.otherDirection);
             this.throwableObjs.push(bottle);
             bottle.world = this;
         }
@@ -74,6 +76,7 @@ class World {
         this.addToMap(this.level.clouds);
         this.addToMap(this.level.enemies);
         this.addToMap(this.level.endBoss);
+        this.addToMap(this.statusBarEndBoss);
         this.addToMap(this.throwableObjs);
 
         this.ctx.translate(-this.camera_x, 0)
@@ -97,7 +100,7 @@ class World {
 
             this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);
 
-            obj.drawFrame(this.ctx)
+            // obj.drawFrame(this.ctx)
 
             if (obj.otherDirection) {
                 this.flipImgBack(obj)
@@ -118,7 +121,7 @@ class World {
     }
 
     checkCollisions() {
-        // setInterval(() => {
+        
         for (let i = 0; i < this.level.enemies.length - 1; i++) {
 
 
@@ -141,6 +144,7 @@ class World {
                     eB.hit();
                     eB.scream();
                     bottle.break();
+                    this.statusBarEndBoss.setPercentage(eB.energy)
                 }
 
             });
@@ -152,7 +156,7 @@ class World {
             this.character.hit();
             this.statusBar.setPercentage(this.character.energy)
         }
-        // }, 1000);
+        
     }
 
 }

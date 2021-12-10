@@ -1,7 +1,6 @@
 class EndBoss extends MovableObj {
 
-    x = 720;
-    // x = 720 * 4 - 300;
+    x = 720 * 4 - 300;
     y = 150;
     width = 480 * 0.4;
     height = 720 * 0.4;
@@ -16,7 +15,9 @@ class EndBoss extends MovableObj {
 
     walking_sound = new Audio('sounds/endBossRun.mp3');
     attack_sound = new Audio('sounds/endBossAttack.mp3')
-    dead_sound = new Audio('sounds/endBossDead.mp3')
+    dead_sound = new Audio('sounds/endBossDead.mp3');
+    birthTime_sound = new Audio('sounds/givingBirthTime.mp3');
+    giveBirth_sound = new Audio('sounds/giveBirth.mp3')
 
 
     stackOf_WALKING = [
@@ -79,66 +80,20 @@ class EndBoss extends MovableObj {
 
         super.applyGravity();
 
-        // this.distanceCharacterSmaller500();
         this.action()
 
     }
 
+
     /**
-     * activate endBoss when distance between Character & endBoss is 500px
-     * or endBoss is hurt.
+     * endBoss changes movements,
+     * when endBoss isHurt too much, energy under 2500, runBack to createMiniChicken.
      */
-
-    // distanceCharacterSmaller500() {
-    //     setInterval(() => {
-    //         this.dst = this.x - this.world.character.x;
-    //         return this.dst < 500;
-    //     }, 1000 / 10);
-    // }
-    // distanceCharacterSmaller200() {
-    //     setInterval(() => {
-    //         this.dst = this.x - this.world.character.x;
-    //         return this.dst < 200;
-    //     }, 1000 / 10);
-    // }
-
     action() {
 
-        // this.rF = setInterval(() => {
-        //     this.distanceWithCharacter = this.x - this.world.character.x;
-        //     if (this.distanceWithCharacter < 500 || this.isHurt()) {
-        //         if (!super.isDead()) {
-        //             if (this.distanceWithCharacter < 500) {
-        //                 this.runForward()
-        //             }
-        //             if (this.distanceWithCharacter < 200) {
-        //                 this.angry;
-        //             }
-        //             if (this.world.character.isHurt()) {
-        //                 this.moveRight();
-        //             }
-        //         }
-        //         else {
-        //             this.die()
-        //         }
-        //     }
-        // }, 1000 / 10);
-
-        // setTimeout(() => {
-        // clearInterval(this.rF)
         // setInterval(() => {
-        //     if (this.distanceCharacterSmaller500() || this.isHurt()) {
-        //         if (super.isDead()) {
-        //             this.die()
-        //         }
-        //         else {
-        //             if (!super.isAboveGround()) {
-        //                 this.jump()
-        //             }
-        //         }
-        //     }
-        // }, 1000 / 10);
-        // }, 2000);
+        //     console.log(this.energy)
+        // }, 1000/5);
 
         this.move = setInterval(() => {
 
@@ -187,17 +142,32 @@ class EndBoss extends MovableObj {
             if (super.isDead()) { this.die() }
             else { 
                 if (this.energy < 2500) {
-                    console.log(this.energy)
                     clearInterval(this.move);
+                    if(this.x < 720*4 - 240){
+                        this.x += 30;
+                        this.birthTime_sound.play();
+                    }
                     this.createMiniChicken();
                 }
              }
-        }, 1000 / 10);
+        }, 1000 / 1);
     }
 
+
+    die() {
+        this.animate(this.stackOf_DEATH)
+        this.dead_sound.play();
+    }
+
+    scream() {
+        this.animate(this.stackOf_HURT)
+    }
+
+
+
+
     runForward() {
-        // if (this.x > 720 * 3) {
-        if (this.x > 200) {
+        if (this.x > 720 * 3) {
             super.moveLeft();
             super.animate(this.stackOf_WALKING);
             this.walking_sound.play();
@@ -223,27 +193,20 @@ class EndBoss extends MovableObj {
         super.animate(this.stackOf_WALKING)
     }
 
+
+
+
+
     createMiniChicken() {
         if (!super.isAboveGround()) {
             super.jump();
+            this.world.level.enemies.push(new MiniChicken(this.x))
+            this.giveBirth_sound.play();
         }
-        if (this.speedY > 30) {
-            return false
-        }
-
     }
 
 
 
-    scream() {
-        this.animate(this.stackOf_HURT)
-    }
 
-
-
-    die() {
-        this.animate(this.stackOf_DEATH)
-        this.dead_sound.play();
-    }
 
 }

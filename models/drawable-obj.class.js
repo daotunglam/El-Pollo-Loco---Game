@@ -38,6 +38,7 @@ class Drawableobj {
         if (
             this instanceof Character ||
             this instanceof Chicken || 
+            this instanceof MiniChicken || 
             this instanceof ThrowableObj || 
             this instanceof EndBoss
         ) {

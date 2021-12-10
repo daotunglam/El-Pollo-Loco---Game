@@ -51,7 +51,7 @@ class MovableObj extends Drawableobj {
             return this.y < 180;
         }
         if (this instanceof ThrowableObj) {
-            return this.y < 360
+            return this.y < 370
         }
         if (this instanceof MiniChicken) {
             return this.y < 370;

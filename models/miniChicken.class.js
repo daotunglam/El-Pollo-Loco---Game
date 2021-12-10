@@ -1,7 +1,7 @@
-class MiniChicken extends MovableObj{
+class MiniChicken extends MovableObj {
 
     x = 600;
-    y = 480 / 2;
+    y = 200;
     width = 50;
     height = 50;
     speedX = 5;
@@ -19,9 +19,10 @@ class MiniChicken extends MovableObj{
         'img/3.Secuencias_Enemy_b�sico/Versi�n_pollito/4.Muerte.png',
     ]
 
-    constructor(){
+    constructor(endBoss_x) {
         super();
 
+        this.x = endBoss_x + 100;
         super.loadImg(this.stackOf_WALKING[0])
         super.loadImgs(this.stackOf_WALKING);
         super.loadImgs(this.stackOf_DEATH);
@@ -31,12 +32,20 @@ class MiniChicken extends MovableObj{
         this.action();
     }
 
-    action(){
+    action() {
         setInterval(() => {
-            if(!super.isAboveGround()){
-                super.moveLeft();
-                super.animate(this.stackOf_WALKING)
+            if (super.isDead()) {
+                super.animate(this.stackOf_DEATH);
+                super.disappear();
             }
-        }, 1000/10);
+            else {
+                if (!super.isAboveGround()) {
+                    this.y = 370;
+                    super.moveLeft();
+                    super.animate(this.stackOf_WALKING)
+                }
+            }
+        }, 1000 / 10);
     }
+
 }

@@ -28,13 +28,14 @@ class ThrowableObj extends MovableObj {
     ]
 
 
-    constructor(x, y) {
+    constructor(x, y, otherDirection) {
         super();
         super.loadImg('img/6.botella/1.Marcador.png');
         super.loadImgs(this.stackOf_TROW);
         super.loadImgs(this.stackOf_BREAK)
         this.x = x;
         this.y = y;
+        this.otherDirection = otherDirection;
         this.trow();
     }
 
@@ -42,11 +43,11 @@ class ThrowableObj extends MovableObj {
         super.applyGravity(this.stackOf_TROW);
 
         setInterval(() => {
-            if (this.world.character.otherDirection == false) {
-                super.moveRight();
+            if (this.otherDirection) {
+                super.moveLeft();
             }
             else {
-                super.moveLeft();
+                super.moveRight();
             }
 
             super.animate(this.stackOf_TROW)

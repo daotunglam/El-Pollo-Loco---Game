@@ -15,10 +15,10 @@ class Character extends MovableObj {
 
     otherDirection = false; //the characters default direction is RIGHT.
 
-    walking_back_sound = new Audio('sounds/walkRubberduck.mp3');
     walking_sound = new Audio('sounds/walk.mp3');
     jumping_sound = new Audio('sounds/jump.mp3');
     screaming_sound = new Audio('sounds/screaming.mp3')
+    dangerZone_sound = new Audio('sounds/dangerZone.mp3');
 
     stackOf_IDLE = [
         'img/2.Secuencias_Personaje-Pepe-correcci�n/1.IDLE/IDLE/I-1.png',
@@ -116,6 +116,8 @@ class Character extends MovableObj {
         this.moveCameraWith();
 
         this.action();
+
+        this.playDangerMusic();
     }
 
 
@@ -296,6 +298,11 @@ class Character extends MovableObj {
         sound.volume = volume;
     }
 
+
+    playDangerMusic(){
+        //TODO
+        return false
+    }
 
 
 

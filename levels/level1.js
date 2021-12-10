@@ -49,13 +49,7 @@ const level1 = new Level(
         new Chicken(),
         new Chicken(),
         new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
 
-        new MiniChicken(),
         new EndBoss(), //endBoss should stay at the end of array to be the last enemy
     ],
 

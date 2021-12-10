@@ -65,23 +65,6 @@ class Chicken extends MovableObj {
         
     }
 
-    // isColliding(bottle) {
-    //     return (
-    //         this.x < bottle.x && bottle.x < this.x + this.width
-    //         && (
-    //             (this.y < bottle.y && bottle.y < this.y + this.width) ||
-    //             (this.y < bottle.y + bottle.width && bottle.y + bottle.width < this.y + this.width)
-    //         )
-    //     )
-    //         ||
-    //         (
-    //             this.x < bottle.x + bottle.width && bottle.x + bottle.width < this.x + this.width
-    //             && (
-    //                 (this.y < bottle.y && bottle.y < this.y + this.width) ||
-    //                 (this.y < bottle.y + bottle.width && bottle.y + bottle.width < this.y + this.width)
-    //             )
-    //         )
-    // }
 
 
 
