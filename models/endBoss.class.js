@@ -6,7 +6,7 @@ class EndBoss extends MovableObj {
     height = 720 * 0.4;
     speedX = 10;
 
-    energy = 5000;
+    energy = 100;
 
     world;
 
@@ -78,8 +78,6 @@ class EndBoss extends MovableObj {
         super.loadImgs(this.stackOf_HURT);
         super.loadImgs(this.stackOf_DEATH);
 
-        super.applyGravity();
-
         this.action()
 
     }
@@ -87,13 +85,11 @@ class EndBoss extends MovableObj {
 
     /**
      * endBoss changes movements,
-     * when endBoss isHurt too much, energy under 2500, runBack to createMiniChicken.
+     * when endBoss isHurt too much, energy under 50, runBack to createMiniChicken.
      */
     action() {
-
-        // setInterval(() => {
-        //     console.log(this.energy)
-        // }, 1000/5);
+        super.applyGravity();
+        
 
         this.move = setInterval(() => {
 
@@ -141,7 +137,7 @@ class EndBoss extends MovableObj {
             if (super.isHurt()) { this.scream() }
             if (super.isDead()) { this.die() }
             else { 
-                if (this.energy < 2500) {
+                if (this.energy <= 50) {
                     clearInterval(this.move);
                     if(this.x < 720*4 - 240){
                         this.x += 30;
@@ -160,7 +156,8 @@ class EndBoss extends MovableObj {
     }
 
     scream() {
-        this.animate(this.stackOf_HURT)
+        this.animate(this.stackOf_HURT);
+        this.world.statusBarEndBoss.setPercentage(this.energy)
     }
 
 

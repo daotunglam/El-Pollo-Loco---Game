@@ -4,9 +4,10 @@ class Chicken extends MovableObj {
     y = 480 - 130;
     width = 100 * 0.7;
     height = 100 * 0.7;
-    speedX = 0.15 + Math.random() * 0.8;
+    speedX = 0.15 + Math.random() * 10;
     speedY = 0;
     speedAnimation = 1000 / 24;
+    energy = 1;
 
     stackOf_WALKING = [
         'img/3.Secuencias_Enemy_b�sico/Versi�n_Gallinita (estas salen por orden de la gallina gigantona)/1.Ga_paso_derecho.png',
@@ -27,15 +28,7 @@ class Chicken extends MovableObj {
 
         this.action();
 
-        this.die();
-
     }
-
-    isJumping() {
-        //TODO
-        return false;
-    }
-
 
     action() {
 
@@ -43,26 +36,31 @@ class Chicken extends MovableObj {
             if (!this.isDead()) {
                 super.moveLeft();
             }
-        }, 16);
+            else if (this.isJumping()) {
 
+            }
+            else {
+                this.die();
+            }
+        }, 1000 / 10);
+
+        setInterval(() => {
+            if (!this.isDead()) {
+                super.animate(this.stackOf_WALKING);
+            }
+        }, 1000 / this.speedX);
+    }
+
+
+    isJumping() {
+        //TODO
+        return false;
     }
 
 
     die() {
-
-        setInterval(() => {
-            if (this.isDead()) {
-                super.animate(this.stackOf_DEATH);
-                super.disappear();
-            }
-            else if (this.isJumping()) {
-
-            } else {
-                super.animate(this.stackOf_WALKING);
-            }
-
-        }, 1000 / 10 / this.speedX)
-        
+        super.animate(this.stackOf_DEATH);
+        super.disappear();
     }
 
 

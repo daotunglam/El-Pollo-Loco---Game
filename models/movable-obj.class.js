@@ -5,7 +5,7 @@ class MovableObj extends Drawableobj {
     speedY;
     speedAnimation;
     acceleration = 4;//increase dropping-speed every specific interval
-    energy = 100;
+    energy;
     lastHit;
 
     currentImg = 0;
@@ -71,7 +71,7 @@ class MovableObj extends Drawableobj {
         //     this.x < obj.x
         //     &&
         //     this.y < obj.y + obj.height
-            
+
         let myleft = this.x;
         let myright = this.x + (this.width);
         let mytop = this.y;
@@ -88,13 +88,13 @@ class MovableObj extends Drawableobj {
         }
 
         return crash;
-    
+
     }
 
 
     hit() {
         if (this.energy > 0) {
-            this.energy -= 10;
+            this.energy -= 1;
             this.lastHit = new Date().getTime();
         }
     }
@@ -109,16 +109,12 @@ class MovableObj extends Drawableobj {
         return this.energy == 0;
     }
 
-    kill(){
-        this.energy = 0;
-    }
-
     disappear() {
         setTimeout(() => {
             this.y = 480; //under canvas
             //     let index = this.world.throwableObjs.indexOf(this)
             //     this.world.throwableObjs.splice(index, 1)
-        }, 1000 / 10);
+        }, 1000 / 2);
     }
 
 

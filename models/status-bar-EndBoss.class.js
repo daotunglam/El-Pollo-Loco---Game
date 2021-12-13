@@ -10,7 +10,7 @@ class StatusBarEndBoss extends Drawableobj {
         'img/7.Marcadores/Barra/Marcador vida/Naranja/100_ .png',
     ]
 
-    percentage = 100;
+    percentage;
 
     width = 400 * 0.3;
     height = 100 * 0.3;
@@ -26,7 +26,7 @@ class StatusBarEndBoss extends Drawableobj {
         // this.y = 200;
         // super.loadImg('img/7.Marcadores/Barra/Marcador vida/Naranja/20__1.png')
         this.attachToEndBossHead();
-        this.setPercentage(5000);
+        this.setPercentage(100);
     }
 
     attachToEndBossHead(){
@@ -37,22 +37,21 @@ class StatusBarEndBoss extends Drawableobj {
     }
 
     setPercentage(endBossEnergy){
-        this.percentage = endBossEnergy/50;
+        this.percentage = endBossEnergy;
 
-        console.log(this.percentage)
-        if (this.percentage == 100) {
+        if (this.percentage > 80) {
             this.loadImg(this.IMAGES[5])
         }
-        else if (this.percentage >= 80) {
+        else if (this.percentage > 60) {
             this.loadImg(this.IMAGES[4])
         }
-        else if (this.percentage >= 60) {
+        else if (this.percentage > 40) {
             this.loadImg(this.IMAGES[3])
         }
-        else if (this.percentage >= 40) {
+        else if (this.percentage > 20) {
             this.loadImg(this.IMAGES[2])
         }
-        else if (this.percentage >= 20) {
+        else if (this.percentage > 0) {
             this.loadImg(this.IMAGES[1])
         }
         else {

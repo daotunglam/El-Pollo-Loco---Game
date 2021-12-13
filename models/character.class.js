@@ -3,6 +3,8 @@ class Character extends MovableObj {
 
     idl; //idle
     longIdl; //longIdle
+    nrBottleCanTrow = 0;
+    nrCoin = 0;
 
 
     y = 0;
@@ -13,12 +15,17 @@ class Character extends MovableObj {
     speedX = 10;
     speedY = 0;
 
+    energy = 5;
+
     otherDirection = false; //the characters default direction is RIGHT.
 
     walking_sound = new Audio('sounds/walk.mp3');
     jumping_sound = new Audio('sounds/jump.mp3');
     screaming_sound = new Audio('sounds/screaming.mp3')
     dangerZone_sound = new Audio('sounds/dangerZone.mp3');
+    stomp_sound = new Audio('sounds/rubberChicken.mp3');
+    getBottle_sound = new Audio('sounds/getBottle.mp3');
+    getCoin_sound = new Audio('sounds/getCoin.mp3');
 
     stackOf_IDLE = [
         'img/2.Secuencias_Personaje-Pepe-correcci�n/1.IDLE/IDLE/I-1.png',
@@ -130,21 +137,23 @@ class Character extends MovableObj {
         super.applyGravity();
         this.moveCameraWith();
 
+        this.collectBottle();
+        this.collectCoin();
 
-        // this.dropAtGameStart()
         this.runFaster();
 
         this.moveLeft();
         this.moveRight();
         this.jump();
 
+        this.stomp();
+        this.throw();
+
+        this.collidesEnemy();
         this.scream();
         this.die();
-        this.stomp();
-        // this.bounce();
-        // this.trow();
 
-        this.idle()
+        this.idle();
 
         this.playDangerMusic();
 
@@ -162,39 +171,29 @@ class Character extends MovableObj {
     }
 
 
-
-    dropAtGameStart() {
-        this.y = 0;
-    }
-
-    isIdle() {
-        return !this.world.keyboard.LEFT &&
-            !this.world.keyboard.RIGHT &&
-            !this.world.keyboard.D &&
-            !this.world.keyboard.UP &&
-            !this.world.keyboard.SPACE &&
-            !this.isHurt() &&
-            !this.isDead()
-    }
-
-    idle() {
-        // setInterval(() => {
-
-        //     clearInterval(this.longIdl)
-        this.idl = setInterval(() => {
-            if (this.isIdle()) {
-                super.animate(this.stackOf_IDLE);
-            }
+    collectBottle() {
+        setInterval(() => {
+            let bts = this.world.level.allBottlesOnGround
+            bts.forEach(bt => {
+                if (this.isColliding(bt)) {
+                    this.nrBottleCanTrow ++;
+                    this.world.level.allBottlesOnGround.splice(bts.indexOf(bt), 1);
+                    this.getBottle_sound.play()
+                }
+            });
         }, 1000 / 10);
-
-        //     setTimeout(() => {
-        //         clearInterval(this.idl)
-        //         this.longIdl = setInterval(() => {
-        //             super.animate(this.stackOf_LONG_IDLE);
-        //         }, 1000 / 10);
-        //     }, 5000);
-
-        // }, 10000);
+    }
+    collectCoin() {
+        setInterval(() => {
+            let coins = this.world.level.coins
+            coins.forEach(coin => {
+                if (this.isColliding(coin)) {
+                    this.nrCoin ++;
+                    this.world.level.coins.splice(coins.indexOf(coin), 1);
+                    this.getCoin_sound.play()
+                }
+            });
+        }, 1000 / 10);
     }
 
     runFaster() {
@@ -273,6 +272,59 @@ class Character extends MovableObj {
     }
 
 
+    stomp() {
+        setInterval(() => {
+
+            let e = this.world.level.enemies;
+            for (let i = 0; i < e.length; i++) {
+
+                const enemy = e[i];
+
+                let characterBottom = this.y + (this.height);
+                let enemyTop = enemy.y;
+
+                if (super.isColliding(enemy) &&
+                    this.isAboveGround() &&
+                    this.speedY < 0 &&
+                    characterBottom - enemyTop
+                ) {
+                    enemy.hit();
+                    this.nrBottleCanTrow++;
+                    this.stomp_sound.play();
+                }
+
+            }
+
+        }, 1000 / 10);
+    }
+
+    throw() {
+        setInterval(() => {
+            if (this.world.keyboard.D) {
+                if (this.nrBottleCanTrow > 0) {
+                    let bottle = new ThrowableObj()
+                    this.world.throwingBottles.push(bottle);
+                    bottle.world = this.world;
+                    bottle.isThrown(this.x +30, this.y + this.height/2, this.otherDirection);
+
+                    this.nrBottleCanTrow --;
+                }
+            }
+        }, 1000 / 5);
+    }
+
+    collidesEnemy(){
+        setInterval(() => {
+            for (let i = 0; i < this.world.level.enemies.length; i++) {
+                const enemy = this.world.level.enemies[i];
+                if (super.isColliding(enemy) && !enemy.isDead()) {
+                    super.hit();
+                    this.world.statusBar.setPercentage(this.energy*20);
+                }
+            }
+        }, 1000/10);
+    }
+
     scream() {
         setInterval(() => {
             if (this.isHurt()) {
@@ -292,6 +344,37 @@ class Character extends MovableObj {
     }
 
 
+    isIdle() {
+        return !this.world.keyboard.LEFT &&
+            !this.world.keyboard.RIGHT &&
+            !this.world.keyboard.D &&
+            !this.world.keyboard.UP &&
+            !this.world.keyboard.SPACE &&
+            !this.isHurt() &&
+            !this.isDead()
+    }
+
+    idle() {
+        // setInterval(() => {
+
+        //     clearInterval(this.longIdl)
+        this.idl = setInterval(() => {
+            if (this.isIdle()) {
+                super.animate(this.stackOf_IDLE);
+            }
+        }, 1000 / 10);
+
+        //     setTimeout(() => {
+        //         clearInterval(this.idl)
+        //         this.longIdl = setInterval(() => {
+        //             super.animate(this.stackOf_LONG_IDLE);
+        //         }, 1000 / 10);
+        //     }, 5000);
+
+        // }, 10000);
+    }
+
+
     playSound(sound, volume) {
         sound.play();
         sound.volume = volume;
@@ -302,32 +385,4 @@ class Character extends MovableObj {
         //TODO
         return false
     }
-
-
-    stomp() {
-        setInterval(() => {
-
-            let e = this.world.level.enemies;
-            for (let i = 0; i < (e.length - 1); i++) {
-
-                const enemy = e[i];
-
-                let mybottom = this.y + (this.height);
-                let othertop = enemy.y;
-
-                if (super.isColliding(enemy) &&
-                    this.isAboveGround() &&
-                    this.speedY < 0 &&
-                    mybottom - othertop
-                ) {
-                    console.log(enemy, mybottom, othertop)
-                    enemy.kill()
-                }
-
-            }
-
-        }, 1000 / 10);
-    }
-
-
 }

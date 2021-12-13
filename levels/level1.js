@@ -36,6 +36,8 @@ const level1 = new Level(
     ],
 
     [
+        new EndBoss(), //endBoss is the first of this array to be called easier
+        
         new Chicken(),
         new Chicken(),
         new Chicken(),
@@ -47,14 +49,52 @@ const level1 = new Level(
         new Chicken(),
         new Chicken(),
         new Chicken(),
-        new Chicken(),
-        new Chicken(),
-
-        new EndBoss(), //endBoss should stay at the end of array to be the last enemy
     ],
 
-    // [
-    //     new ThrowableObj(),
-    // ],
+    [
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+        new ThrowableObj,
+    ],
+
+    [
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+        new Coin(),
+    ]
 
 );

@@ -6,6 +6,7 @@ class MiniChicken extends MovableObj {
     height = 50;
     speedX = 5;
     speedY = 0;
+    energy = 1;
 
     world;
 
@@ -27,12 +28,12 @@ class MiniChicken extends MovableObj {
         super.loadImgs(this.stackOf_WALKING);
         super.loadImgs(this.stackOf_DEATH);
 
-        super.applyGravity();
-
         this.action();
     }
 
     action() {
+        super.applyGravity();
+
         setInterval(() => {
             if (super.isDead()) {
                 super.animate(this.stackOf_DEATH);

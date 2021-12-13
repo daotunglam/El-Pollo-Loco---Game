@@ -7,7 +7,9 @@ class World {
     character = new Character();
     statusBar = new StatusBar();
     statusBarEndBoss = new StatusBarEndBoss();
-    throwableObjs = [];
+    statusBarNrBottle = new StatusBarNrBottle();
+    statusBarNrCoin = new StatusBarNrCoin();
+    throwingBottles = [];
     camera_x;
 
 
@@ -21,32 +23,22 @@ class World {
         this.draw(); //draw everything for the world
         this.setWorld();
         // this.level.bg_melody.play();
-        this.run();
     }
 
     setWorld() {
         this.character.world = this;
         this.statusBar.world = this;
         this.statusBarEndBoss.world = this;
+        this.statusBarNrBottle.world = this;
+        this.statusBarNrCoin.world = this;
         this.level.enemies.forEach(enemy => {
             enemy.world = this;
         });
+        this.level.coins.forEach(coin=>{
+            coin.world = this;
+        });
     }
 
-    run() {
-        setInterval(() => {
-            this.checkCollisions();
-            this.checkThrowObjs();
-        }, 200);
-    }
-
-    checkThrowObjs() {
-        if (this.keyboard.D) {
-            let bottle = new ThrowableObj(this.character.x, this.character.y, this.character.otherDirection);
-            this.throwableObjs.push(bottle);
-            bottle.world = this;
-        }
-    }
 
 
 
@@ -77,13 +69,17 @@ class World {
         this.addToMap(this.level.clouds);
         this.addToMap(this.level.enemies);
         this.addToMap(this.level.endBoss);
+        this.addToMap(this.level.allBottlesOnGround);
+        this.addToMap(this.level.coins);
+        this.addToMap(this.throwingBottles);
         this.addToMap(this.statusBarEndBoss);
-        this.addToMap(this.throwableObjs);
 
         this.ctx.translate(-this.camera_x, 0)
         this.addToMap(this.statusBar);
+        this.addToMap(this.statusBarNrBottle);
+        this.addToMap(this.statusBarNrCoin);
         this.ctx.translate(this.camera_x, 0)
-
+        
         this.addToMap(this.character); //draw the character in a new coordinate
 
     }
@@ -99,7 +95,15 @@ class World {
                 this.flipImg(obj);
             }
 
-            this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);
+            if(obj instanceof Drawableobj){
+                this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);
+            }
+            if(obj instanceof Text){
+                this.ctx.font = obj.font;
+                this.ctx.fillText(obj.text, obj.x, obj.y);
+                this.addBottleImgNextToNrBottle();
+                this.addCoinImgNextToNrCoin();
+            }
 
             // obj.drawFrame(this.ctx)
 
@@ -120,44 +124,15 @@ class World {
         obj.x = obj.x * -1;
         this.ctx.restore();
     }
-
-    checkCollisions() {
-
-        for (let i = 0; i < this.level.enemies.length - 1; i++) {
-
-
-            const chicken = this.level.enemies[i];
-
-            if (this.character.isColliding(chicken) && !chicken.isDead()) {
-                this.character.hit();
-                this.statusBar.setPercentage(this.character.energy);
-            }
-
-
-            this.throwableObjs.forEach(bottle => {
-
-                if (chicken.isColliding(bottle) && !chicken.isDead()) {
-                    chicken.kill();
-                }
-
-                let eB = this.level.endBoss;
-                if (eB.isColliding(bottle) && !eB.isDead()) {
-                    eB.hit();
-                    eB.scream();
-                    bottle.break();
-                    this.statusBarEndBoss.setPercentage(eB.energy)
-                }
-
-            });
-
-
-        }
-
-        if (this.level.endBoss.isColliding(this.character)) {
-            this.character.hit();
-            this.statusBar.setPercentage(this.character.energy)
-        }
-
+    addBottleImgNextToNrBottle(){
+        let bottleImg = new Image();
+        bottleImg.src = 'img/6.botella/1.Marcador.png';
+        this.ctx.drawImage(bottleImg, 2, 52, 45, 40);
+    }
+    addCoinImgNextToNrCoin(){
+        let coinImg = new Image();
+        coinImg.src = 'img/8.Coin/Moneda2.png';
+        this.ctx.drawImage(coinImg, -5, 80, 60, 60);
     }
 
 }

@@ -10,24 +10,22 @@ class StatusBar extends Drawableobj {
         'img/7.Marcadores/Barra/Marcador vida/azul/100_.png',
     ]
 
-    percentage = 100;
+    percentage;
 
     x = 10;
     y = 10;
-    width = 400 * 0.5;
-    height = 100 * 0.5;
+    width = 400 * 0.4;
+    height = 100 * 0.4;
 
     world;
 
 
     constructor() {
         super();
-        // super.loadImg(this.IMAGES[5]);
         this.setPercentage(100);
         // this.moveStatusBarWithCamera();
     }
 
-    //setPercentage(50);
     setPercentage(percentage) {
 
         this.percentage = percentage; // => 0 ... 5
@@ -54,9 +52,9 @@ class StatusBar extends Drawableobj {
     }
 
 
-    moveStatusBarWithCamera() {
-        setInterval(() => {
-            this.x = 10 - this.world.camera_x;
-        }, 1000/10);
-    }
+    // moveStatusBarWithCamera() {
+    //     setInterval(() => {
+    //         this.x = 10 - this.world.camera_x;
+    //     }, 1000/10);
+    // }
 }
