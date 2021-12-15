@@ -5,10 +5,28 @@ let keyboard = new Keyboard();
 
 function init() {
     canvas = document.getElementById('canvas');
-    canvas.width = 720;
-    canvas.height = 480;
 
     world = new World(canvas, keyboard);
+}
+
+function startGame(){
+    init();
+    world.startGame();
+    
+    document.getElementById('startScreen').classList.add('d-none');
+    document.getElementById('playScreen').classList.remove('d-none');
+}
+function pauseGame(){
+    world.pauseGame();
+    document.getElementById('btnPause').classList.add('d-none');
+    document.getElementById('btnResume').classList.remove('d-none');
+}
+function resumeGame(){
+    document.getElementById('btnResume').classList.add('d-none');
+    document.getElementById('btnPause').classList.remove('d-none');
+}
+function restartGame(){
+    window.location = 'index.html';
 }
 
 

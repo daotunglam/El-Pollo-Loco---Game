@@ -1,6 +1,59 @@
-#canvas{
-    background-color: black;
+body{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(img/5.Fondo/1.png);
+    height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#canvas,  #startScreen-bg, #gameoverScreen-bg{
+    /* display: block; */
+    max-width: 720px;
+    max-height: 480px;
+}
+
+@media only screen and (max-width: 720px) {
+    #canvas, #startScreen-bg, #gameoverScreen-bg{
+        width: 100vw;
+    }
+}
+@media only screen and (max-height: 480px) {
+    #canvas, #startScreen-bg, #gameoverScreen-bg{
+        height: 100vh;
+    }
+}
+
+#startScreen, #playScreen, #btnStart, #gameoverScreen, #btnRestart{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+}
+
+#playManual{
+    display: flex;
+    white-space: nowrap;
+    color: white;
+    position: absolute;
+    transform: translate(-50%, 0);
+    bottom: 0;
+    left: 50%;
+}
+#playManual > div{
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+.key{
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    border-radius: 4px;
+    padding: 4px;
+    margin: 1px;
+    min-width: 50px;
+    text-align: center;
+}
+#btnStop{
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }

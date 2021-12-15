@@ -1,5 +1,7 @@
 class MiniChicken extends MovableObj {
 
+    primaryAction;
+
     x = 600;
     y = 200;
     width = 50;
@@ -32,9 +34,9 @@ class MiniChicken extends MovableObj {
     }
 
     action() {
-        super.applyGravity();
 
-        setInterval(() => {
+        this.primaryAction = setInterval(() => {
+            super.applyGravity();
             if (super.isDead()) {
                 super.animate(this.stackOf_DEATH);
                 super.disappear();

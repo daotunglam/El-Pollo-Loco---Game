@@ -58,14 +58,14 @@ class EndBoss extends MovableObj {
     ];
 
 
-    move;
+    primaryAction;
     rF;//runForward
     agr;// angry
     atk;// attack;
     rB;// moveRight
     scr;//scream
     d;//die
-    gB;//giveBirth
+    gBirth;//giveBirth
 
 
     constructor() {
@@ -78,7 +78,7 @@ class EndBoss extends MovableObj {
         super.loadImgs(this.stackOf_HURT);
         super.loadImgs(this.stackOf_DEATH);
 
-        this.action()
+        // this.action():
 
     }
 
@@ -88,17 +88,20 @@ class EndBoss extends MovableObj {
      * when endBoss isHurt too much, energy under 50, runBack to createMiniChicken.
      */
     action() {
-        super.applyGravity();
         
-
-        this.move = setInterval(() => {
-
+        
+        this.primaryAction = setInterval(() => {
+            
+            setInterval(() => {
+                super.applyGravity();
+            }, 1000/10);
+            
             this.rF = setInterval(() => {
                 if (super.isDead()) { this.die() }
                 else if (super.isHurt()) { this.scream() }
                 else { this.runForward() }
             }, 1000 / 10);
-
+            
             setTimeout(() => {
                 clearInterval(this.rF);
                 this.agr = setInterval(() => {
@@ -107,7 +110,7 @@ class EndBoss extends MovableObj {
                     else { this.angry() }
                 }, 1000 / 10);
             }, 1000 * 2);
-
+            
             setTimeout(() => {
                 clearInterval(this.agr);
                 this.atk = setInterval(() => {
@@ -116,7 +119,7 @@ class EndBoss extends MovableObj {
                     else { this.attack() }
                 }, 1000 / 10);
             }, 1000 * 4);
-
+            
             setTimeout(() => {
                 clearInterval(this.atk);
                 this.rB = setInterval(() => {
@@ -125,7 +128,7 @@ class EndBoss extends MovableObj {
                     else { this.runBack() }
                 }, 1000 / 10);
             }, 1000 * 6);
-
+            
             setTimeout(() => {
                 clearInterval(this.rB)
                 if (super.isHurt()) { this.scream() }
@@ -133,7 +136,7 @@ class EndBoss extends MovableObj {
 
         }, 1000 * 10);
 
-        this.gB = setInterval(() => {
+        this.gBirth = setInterval(() => {
             if (super.isHurt()) { this.scream() }
             if (super.isDead()) { this.die() }
             else { 
@@ -153,6 +156,13 @@ class EndBoss extends MovableObj {
     die() {
         this.animate(this.stackOf_DEATH)
         this.dead_sound.play();
+        this.world.pauseCharacter();
+        this.world.pauseEnemies();
+        this.world.pauseClouds();
+        this.world.pauseBgMelody();
+        setTimeout(() => {
+            restartGame();
+        }, 10000);
     }
 
     scream() {

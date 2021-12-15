@@ -1,5 +1,8 @@
 class Chicken extends MovableObj {
 
+    primaryAction;
+    primaryAction2;
+
     x = 400 + Math.random() * (720 * 4); //each chicken is drawed in a random coordinate 300px far from canvas-left
     y = 480 - 130;
     width = 100 * 0.7;
@@ -26,13 +29,13 @@ class Chicken extends MovableObj {
         super.loadImgs(this.stackOf_WALKING);
         super.loadImgs(this.stackOf_DEATH);
 
-        this.action();
+        // this.action();
 
     }
 
     action() {
 
-        setInterval(() => {
+        this.primaryAction = setInterval(() => {
             if (!this.isDead()) {
                 super.moveLeft();
             }
@@ -44,7 +47,7 @@ class Chicken extends MovableObj {
             }
         }, 1000 / 10);
 
-        setInterval(() => {
+        this.primaryAction2 = setInterval(() => {
             if (!this.isDead()) {
                 super.animate(this.stackOf_WALKING);
             }

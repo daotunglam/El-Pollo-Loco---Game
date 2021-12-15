@@ -1,6 +1,7 @@
 class MovableObj extends Drawableobj {
 
 
+
     speedX;
     speedY;
     speedAnimation;
@@ -38,12 +39,12 @@ class MovableObj extends Drawableobj {
     }
 
     applyGravity() { //make objs drop on the ground
-        setInterval(() => {
+        // setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration; //increase dropping-speed every 20ms
             }
-        }, 1000 / 10);
+        // }, 1000 / 10);
     }
 
     isAboveGround() {

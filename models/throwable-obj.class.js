@@ -41,12 +41,12 @@ class ThrowableObj extends MovableObj {
 
 
     isThrown(x, y, otherDirection) {
-        super.applyGravity(this.stackOf_TROW); //only throwing bottle can drop
-
+        
         this.x = x;
         this.y = y;
-
+        
         setInterval(() => {
+            super.applyGravity(this.stackOf_TROW); //only throwing bottle can drop
             if (otherDirection) {
                 super.moveLeft();
             }

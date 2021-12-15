@@ -22,7 +22,6 @@ class World {
         this.keyboard = keyboard;
         this.draw(); //draw everything for the world
         this.setWorld();
-        // this.level.bg_melody.play();
     }
 
     setWorld() {
@@ -34,13 +33,57 @@ class World {
         this.level.enemies.forEach(enemy => {
             enemy.world = this;
         });
-        this.level.coins.forEach(coin=>{
+        this.level.coins.forEach(coin => {
             coin.world = this;
         });
     }
 
 
-
+    startGame() {
+            this.level.bg_melody.play();
+            this.level.clouds.forEach(cloud => { cloud.action() });
+            this.character.action();
+            this.level.enemies.forEach(enemy => { enemy.action() });
+    }
+    pauseGame(){
+        this.pauseCharacter();
+        this.pauseEnemies();
+        this.pauseEndBoss();
+        this.pauseClouds();
+        this.pauseBgMelody();
+    }
+    pauseCharacter(){
+        clearInterval(this.character.primaryAction);
+        clearInterval(this.character.j)
+        clearInterval(this.character.ju)
+        clearInterval(this.character.jd)
+    }
+    pauseEnemies(){
+        this.level.enemies.forEach(enemy =>{
+            clearInterval(enemy.primaryAction)
+            clearInterval(enemy.primaryAction2)
+        });
+    }
+    pauseEndBoss(){
+        let eBoss = this.level.enemies[0];
+        clearInterval(eBoss.gBirth);
+        clearTimeout(eBoss.rF)
+        clearTimeout(eBoss.agr)
+        clearTimeout(eBoss.atk)
+        clearTimeout(eBoss.rB)
+        clearTimeout(eBoss.scr)
+    }
+    pauseClouds(){
+        this.level.clouds.forEach(cloud =>{
+            clearInterval(cloud.primaryAction)
+        })
+    }
+    pauseBgMelody(){
+        this.level.bg_melody.pause();
+    }
+    gameoverScreen(){
+        document.getElementById('gameoverScreen').classList.remove('d-none');
+    }
 
 
     draw() {
@@ -79,7 +122,7 @@ class World {
         this.addToMap(this.statusBarNrBottle);
         this.addToMap(this.statusBarNrCoin);
         this.ctx.translate(this.camera_x, 0)
-        
+
         this.addToMap(this.character); //draw the character in a new coordinate
 
     }
@@ -95,10 +138,10 @@ class World {
                 this.flipImg(obj);
             }
 
-            if(obj instanceof Drawableobj){
+            if (obj instanceof Drawableobj) {
                 this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);
             }
-            if(obj instanceof Text){
+            if (obj instanceof Text) {
                 this.ctx.font = obj.font;
                 this.ctx.fillText(obj.text, obj.x, obj.y);
                 this.addBottleImgNextToNrBottle();
@@ -124,12 +167,12 @@ class World {
         obj.x = obj.x * -1;
         this.ctx.restore();
     }
-    addBottleImgNextToNrBottle(){
+    addBottleImgNextToNrBottle() {
         let bottleImg = new Image();
         bottleImg.src = 'img/6.botella/1.Marcador.png';
         this.ctx.drawImage(bottleImg, 2, 52, 45, 40);
     }
-    addCoinImgNextToNrCoin(){
+    addCoinImgNextToNrCoin() {
         let coinImg = new Image();
         coinImg.src = 'img/8.Coin/Moneda2.png';
         this.ctx.drawImage(coinImg, -5, 80, 60, 60);

@@ -1,7 +1,7 @@
 const level1 = new Level(
 
 
-    new Audio('sounds/background_melody.mp3'), //don't give this only-obj the brackets []
+    new Audio('sounds/background_melody.mp3'), //don't give this only-obj the brackets [], it won't work.
 
     [
         new Bg('img/5.Fondo/Capas/5.cielo_1920-1080px.png', 1 - 720, 0),
@@ -33,6 +33,8 @@ const level1 = new Level(
     [
         new Cloud('img/5.Fondo/Capas/4.nubes/1.png', 0, 0),
         new Cloud('img/5.Fondo/Capas/4.nubes/2.png', 720, 0),
+        new Cloud('img/5.Fondo/Capas/4.nubes/1.png', 720*2, 0),
+        new Cloud('img/5.Fondo/Capas/4.nubes/2.png', 720*3, 0),
     ],
 
     [

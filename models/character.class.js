@@ -1,8 +1,13 @@
 class Character extends MovableObj {
 
 
+    primaryAction;//when pause this, the others won't execute
     idl; //idle
     longIdl; //longIdle
+    d;
+
+
+
     nrBottleCanTrow = 0;
     nrCoin = 0;
 
@@ -10,7 +15,7 @@ class Character extends MovableObj {
     y = 0;
     x = 100;
     width = 200 * 0.5;
-    height = canvas.height * 0.5;
+    height = 480 * 0.5;
     speedAnimation = 1000 / 5;
     speedX = 10;
     speedY = 0;
@@ -118,23 +123,13 @@ class Character extends MovableObj {
         super.loadImgs(this.stackOf_HURT);
         super.loadImgs(this.stackOf_DEATH);
 
-        this.action();
+        // this.action();
     }
-
-
-    // drawFrame(ctx) {
-    //     ctx.beginPath();
-    //     ctx.lineWidth = "1";
-    //     ctx.strokeStyle = "blue";
-    //     ctx.rect(this.x +20, this.y + 90, this.width - 40, this.height - 100);
-    //     ctx.stroke();
-    // }
 
 
 
 
     action() {
-        super.applyGravity();
         this.moveCameraWith();
 
         this.collectBottle();
@@ -142,12 +137,17 @@ class Character extends MovableObj {
 
         this.runFaster();
 
-        this.moveLeft();
-        this.moveRight();
+        this.primaryAction = setInterval(() => {
+            super.applyGravity();
+            this.moveLeft();
+            this.moveRight();
+            this.throw();
+            this.idle();
+        }, 1000 / 10);
+
         this.jump();
 
         this.stomp();
-        this.throw();
 
         this.collidesEnemy();
         this.scream();
@@ -176,7 +176,7 @@ class Character extends MovableObj {
             let bts = this.world.level.allBottlesOnGround
             bts.forEach(bt => {
                 if (this.isColliding(bt)) {
-                    this.nrBottleCanTrow ++;
+                    this.nrBottleCanTrow++;
                     this.world.level.allBottlesOnGround.splice(bts.indexOf(bt), 1);
                     this.getBottle_sound.play()
                 }
@@ -188,7 +188,7 @@ class Character extends MovableObj {
             let coins = this.world.level.coins
             coins.forEach(coin => {
                 if (this.isColliding(coin)) {
-                    this.nrCoin ++;
+                    this.nrCoin++;
                     this.world.level.coins.splice(coins.indexOf(coin), 1);
                     this.getCoin_sound.play()
                 }
@@ -209,47 +209,47 @@ class Character extends MovableObj {
 
     moveLeft() {
 
-        setInterval(() => {
+        // setInterval(() => {
 
-            if
-                (this.world.keyboard.LEFT
-                && this.x > 0 //keep character not moving over left of map.
-            ) {
-                this.otherDirection = true;
-                super.moveLeft();
-                if (! super.isAboveGround()) {
-                    super.animate(this.stackOf_WALKING);
-                    this.playSound(this.walking_sound, 50 / 100);
-                }
+        if
+            (this.world.keyboard.LEFT
+            && this.x > 0 //keep character not moving over left of map.
+        ) {
+            this.otherDirection = true;
+            super.moveLeft();
+            if (! super.isAboveGround()) {
+                super.animate(this.stackOf_WALKING);
+                this.playSound(this.walking_sound, 50 / 100);
             }
+        }
 
-        }, 1000 / 10);
+        // }, 1000 / 10);
     }
 
 
     moveRight() {
 
-        setInterval(() => {
-            if
-                (this.world.keyboard.RIGHT
-                && this.x < this.world.level.level_end_x //to keep character not moving over right of map
-            ) {
-                this.otherDirection = false;
-                super.moveRight();
-                if (! super.isAboveGround()) {
-                    super.animate(this.stackOf_WALKING);
-                    this.playSound(this.walking_sound, 50 / 100);
-                }
+        // setInterval(() => {
+        if
+            (this.world.keyboard.RIGHT
+            && this.x < this.world.level.level_end_x //to keep character not moving over right of map
+        ) {
+            this.otherDirection = false;
+            super.moveRight();
+            if (! super.isAboveGround()) {
+                super.animate(this.stackOf_WALKING);
+                this.playSound(this.walking_sound, 50 / 100);
             }
+        }
 
-        }, 1000 / 10);
+        // }, 1000 / 10);
 
     }
 
 
     jump() {
 
-        setInterval(() => {
+        this.j = setInterval(() => {
             if (this.world.keyboard.UP
                 && !super.isAboveGround()
             ) {
@@ -258,13 +258,13 @@ class Character extends MovableObj {
             }
         }, 1000 / 10);
 
-        setInterval(() => {
+        this.ju = setInterval(() => {
             if (this.speedY >= 0) {
                 super.animate(this.stackOf_JUMPING)
             }
         }, 1000 / 5);
 
-        setInterval(() => {
+        this.jd = setInterval(() => {
             if (this.isAboveGround() && this.speedY < 0) {
                 this.animate(this.stackOf_DROPPING)
             }
@@ -299,30 +299,30 @@ class Character extends MovableObj {
     }
 
     throw() {
-        setInterval(() => {
-            if (this.world.keyboard.D) {
-                if (this.nrBottleCanTrow > 0) {
-                    let bottle = new ThrowableObj()
-                    this.world.throwingBottles.push(bottle);
-                    bottle.world = this.world;
-                    bottle.isThrown(this.x +30, this.y + this.height/2, this.otherDirection);
+        // setInterval(() => {
+        if (this.world.keyboard.D) {
+            if (this.nrBottleCanTrow > 0) {
+                let bottle = new ThrowableObj()
+                this.world.throwingBottles.push(bottle);
+                bottle.world = this.world;
+                bottle.isThrown(this.x + 30, this.y + this.height / 2, this.otherDirection);
 
-                    this.nrBottleCanTrow --;
-                }
+                this.nrBottleCanTrow--;
             }
-        }, 1000 / 5);
+        }
+        // }, 1000 / 10);
     }
 
-    collidesEnemy(){
+    collidesEnemy() {
         setInterval(() => {
             for (let i = 0; i < this.world.level.enemies.length; i++) {
                 const enemy = this.world.level.enemies[i];
                 if (super.isColliding(enemy) && !enemy.isDead()) {
                     super.hit();
-                    this.world.statusBar.setPercentage(this.energy*20);
+                    this.world.statusBar.setPercentage(this.energy * 20);
                 }
             }
-        }, 1000/10);
+        }, 1000 / 10);
     }
 
     scream() {
@@ -336,9 +336,11 @@ class Character extends MovableObj {
 
 
     die() {
-        setInterval(() => {
+        this.d = setInterval(() => {
             if (this.isDead()) {
-                super.animate(this.stackOf_DEATH)
+                super.animate(this.stackOf_DEATH);
+                this.world.pauseGame();
+                this.world.gameoverScreen();
             }
         }, 1000 / 10);
     }
@@ -358,11 +360,11 @@ class Character extends MovableObj {
         // setInterval(() => {
 
         //     clearInterval(this.longIdl)
-        this.idl = setInterval(() => {
+        // this.idl = setInterval(() => {
             if (this.isIdle()) {
                 super.animate(this.stackOf_IDLE);
             }
-        }, 1000 / 10);
+        // }, 1000 / 10);
 
         //     setTimeout(() => {
         //         clearInterval(this.idl)

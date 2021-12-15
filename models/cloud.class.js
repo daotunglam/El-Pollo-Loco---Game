@@ -1,5 +1,8 @@
 class Cloud extends MovableObj {
     
+
+    primaryAction;
+
     width = 720;
     height = 480;
     speedX = 0.3;
@@ -9,7 +12,11 @@ class Cloud extends MovableObj {
         super.loadImg(imgPath);
         this.x = x;
         this.y = y;
-        setInterval(() => {
+        // this.action();
+    }
+
+    action(){
+        this.primaryAction = setInterval(() => {
             super.moveLeft();
         }, 20);
     }
